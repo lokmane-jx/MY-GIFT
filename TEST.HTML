@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Day - 26 February</title>
+    <style>
+        /* --- كودك الأصلي بدون تغيير --- */
+        body, html { margin: 0; padding: 0; overflow: hidden; background: radial-gradient(circle, #4a0e2e, #000000); font-family: 'Arial', sans-serif; height: 100vh; }
+        .background-elements { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .element { position: absolute; color: rgba(255, 105, 180, 0.7); animation: float-around 8s infinite linear; }
+        @keyframes float-around { 0% { transform: translateY(110vh) rotate(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
+        .container { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; color: white; padding: 20px; }
+        #typing-text { font-size: 1.8rem; color: #ffb6c1; min-height: 200px; text-shadow: 2px 2px 15px rgba(255, 182, 193, 0.6); line-height: 1.8; max-width: 800px; }
+        .welcome-title { font-size: 3.5rem; color: #ff69b4; font-weight: bold; margin-bottom: 20px; text-shadow: 0 0 20px #ff69b4; }
+        .warning-box { border: 3px solid #ff0000; padding: 15px; margin-top: 30px; background: rgba(255, 0, 0, 0.1); animation: blinker 1.2s infinite; border-radius: 10px; }
+        @keyframes blinker { 50% { border-color: transparent; box-shadow: 0 0 30px red; } }
+        #start-btn { margin-top: 30px; padding: 15px 50px; font-size: 1.5rem; background: #ff69b4; border: none; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 0 20px #ff69b4; display: none; font-weight: bold; transition: 0.3s; }
+        #start-btn:hover { transform: scale(1.1); }
+        #stage1 { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; z-index: 20; position: relative; }
+        #main-basket { font-size: 6rem; position: relative; margin-bottom: 10px; filter: drop-shadow(0 0 15px #ff69b4); display: flex; justify-content: center; align-items: center; }
+        #basket-content { position: absolute; top: 10%; width: 80px; height: 50px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; overflow: visible; pointer-events: none; }
+        #basket-content span { font-size: 1.2rem; margin: -5px; }
+        #garden { position: relative; width: 95%; height: 420px; border-radius: 25px; background: rgba(0,40,0,0.1); border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+        .flower-btn { cursor: pointer; position: absolute; transition: transform 0.3s ease, left 0.5s, top 0.5s; font-size: 2.2rem; user-select: none; z-index: 30; }
+        .special-flower { font-size: 5rem !important; filter: drop-shadow(0 0 20px gold); animation: magic-glow 1.5s infinite; }
+        @keyframes magic-glow { 0% { transform: scale(1); filter: drop-shadow(0 0 10px gold); } 50% { transform: scale(1.2); filter: drop-shadow(0 0 30px gold); } 100% { transform: scale(1); filter: drop-shadow(0 0 10px gold); } }
+        #name-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; color: black; padding: 40px; border-radius: 30px; box-shadow: 0 0 100px #ff69b4; z-index: 1000; text-align: center; }
+        .popping-effect { animation: pop-out 0.6s forwards; }
+        @keyframes pop-out { to { transform: translate(-50%, -50%) scale(0); opacity: 0; } }
+        .confetti { position: absolute; width: 10px; height: 10px; z-index: 1001; animation: fall 3s linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
+
+        #stage-cake { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100vh; z-index: 100; text-align: center; }
+        #cake-text-anim { font-size: 2rem; color: #ffb6c1; margin-bottom: 40px; min-height: 50px; text-shadow: 0 0 10px #ff69b4; }
+        .cake-container { display: none; position: relative; font-size: 10rem; cursor: pointer; }
+        .candle { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 12px; height: 45px; background: linear-gradient(to bottom, #fff, #ffb6c1); border-radius: 3px; z-index: 1; }
+        .flame { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 20px; height: 35px; background: radial-gradient(circle at bottom, #ff4500, #ffa500, gold, white); border-radius: 50% 50% 20% 20%; box-shadow: 0 0 20px #ff4500, 0 0 40px #ffa500; animation: flicker 0.1s infinite alternate; z-index: 2; }
+        @keyframes flicker { 0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 0.9; } 100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 1; } }
+
+        #jumpscare-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        #jumpscare-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-elements" id="bg-elements"></div>
+
+    <audio id="hbd-song">
+        <source src="HP.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="scary-sound" preload="auto">
+        <source src="JP.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="jumpscare-overlay">
+        <img id="jumpscare-img" src="download.jpg" alt="BOO!">
+    </div>
+
+    <div id="intro-screen" class="container">
+        <div class="welcome-title">WELCOME</div>
+        <div id="typing-text"></div>
+        <div class="warning-box">
+            <h2 style="color: red; margin: 0;">⚠️ WARNING ⚠️</h2>
+            <p style="color: #ff4444; font-weight: bold; font-size: 1.2rem;">السيت فيه لقطات Jumpscares خفيفة... <br> ركزي مليح مع الصوت! و متحركيش طيليفون بزاف</p>
+        </div>
+        <button id="start-btn" onclick="nextStep()">let's start the journey🚀</button>
+    </div>
+
+    <div id="stage1">
+        <div style="background: rgba(255,105,180,0.2); border: 2px dashed #ff69b4; padding: 10px 25px; border-radius: 50px; margin-bottom: 5px; color: white;">
+            <h3 style="margin:0;">🌸المهمة اللولة سهلة خلاص لمي 21 وردة من بستانكِ الخاص 🌸</h3>
+        </div>
+        <div style="font-size: 1.5rem; margin: 5px; color: white;">الورد المجموع: <span id="flower-count" style="color:#ff69b4; font-weight:bold;">0</span> / 21</div>
+        <div id="main-basket">🧺<div id="basket-content"></div></div>
+        <div id="garden"></div>
+    </div>
+
+    <div id="stage-cake">
+        <div id="cake-text-anim"></div>
+        <div class="cake-container" id="cake-visual">
+            <div class="candle">
+                <div class="flame" id="main-flame"></div>
+            </div>
+            🎂
+            <div id="blow-msg" style="color: white; font-size: 1.5rem; margin-top: 50px; font-weight: bold; text-shadow: 0 0 10px #ff69b4;">MAKE A WISH & BLOW! 🌬️</div>
+        </div>
+    </div>
+
+    <div id="name-modal">
+        <h2 style="color:#ff1493;">ERROR: MISSING IDENTITY</h2>
+        <p>متقدريش تدي الوردة رقم 21 لازم تكتبي اسمك بكل!</p>
+        <input type="text" id="name-input" placeholder="من أنتِ؟" style="padding:15px; width:85%; font-size:1.3rem; border-radius:15px; border:2px solid #ff69b4; text-align:center;">
+        <br><br>
+        <button onclick="checkName()" style="background:#ff69b4; color:white; padding:12px 35px; border-radius:15px; border:none; cursor:pointer; font-weight:bold;">تأكيد ✨</button>
+        <p id="error-msg" style="color:red; display:none; font-weight:bold; margin-top:10px;">YOUR NAME IS INCORRECT! 😡</p>
+        <p id="hint-msg" style="color:#2ecc71; display:none; font-weight:bold; margin-top:5px;">Hint: اكتب اسمك الكامل بالإنجليزية كما أعرفه</p>
+    </div>
+
+    <script>
+        const bgContainer = document.getElementById('bg-elements');
+        const icons = ['❤️', '✨', '💖', '🎂', '⭐️', '🎈', '🌹', '💎', '🎁'];
+        for (let i = 0; i < 60; i++) {
+            let el = document.createElement('div');
+            el.className = 'element';
+            el.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.fontSize = (Math.random() * 25 + 15) + 'px';
+            el.style.animationDuration = (Math.random() * 5 + 7) + 's';
+            el.style.animationDelay = (Math.random() * 5) + 's';
+            bgContainer.appendChild(el);
+        }
+
+        const textToType = "خدمت هاد السيت سبيسيال لبنادم انا منعتابروش بنادم عادي انما افضل انسان قدمتهولي الحياة وجا اليوم لي يعتبر افضل يوم بالنسبة ليا لي هوا 26 فيفري و لي يمثل يوم ميلادها.\nراح تجوزي على 4 مراحل باش تلحقي للكادو تاعك.\nكل مرحلة فيها مفاجأة!";
+        let index = 0;
+        const typingElement = document.getElementById("typing-text");
+        function typeWriter() {
+            if (index < textToType.length) {
+                let char = textToType.charAt(index);
+                typingElement.innerHTML += (char === '\n') ? "<br>" : char;
+                index++;
+                setTimeout(typeWriter, 50);
+            } else { document.getElementById('start-btn').style.display = 'block'; }
+        }
+        window.onload = typeWriter;
+
+        function nextStep() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('stage1').style.display = 'flex';
+            initGarden();
+        }
+
+        let flowerCount = 0;
+        let attempts = 0;
+        const flowerTypes = ['🌹', '🌷', '🌸', '🌺', '🌻', '🌼'];
+        function initGarden() {
+            const garden = document.getElementById('garden');
+            for (let i = 0; i < 100; i++) { spawnFlower(false); }
+        }
+
+        function spawnFlower(isSpecial) {
+            const garden = document.getElementById('garden');
+            let f = document.createElement('span');
+            f.innerHTML = isSpecial ? "🌹" : flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
+            f.className = isSpecial ? "flower-btn special-flower" : "flower-btn";
+            f.style.left = Math.random() * 90 + "%";
+            f.style.top = Math.random() * 90 + "%";
+
+            if (!isSpecial && Math.random() > 0.7) {
+                f.onmouseover = function() {
+                    this.style.left = Math.random() * 90 + "%";
+                    this.style.top = Math.random() * 90 + "%";
+                };
+            }
+
+            f.onclick = function() {
+                if (flowerCount < 20) { 
+                    collect(this); 
+                    if (flowerCount === 10) { triggerJumpscare(); }
+                } 
+                else if (flowerCount === 20 && !isSpecial) { document.getElementById('name-modal').style.display = 'block'; } 
+                else if (isSpecial) {
+                    collect(this);
+                    setTimeout(startCakeStage, 1000);
+                }
+            };
+            garden.appendChild(f);
+        }
+
+        function triggerJumpscare() {
+            const overlay = document.getElementById('jumpscare-overlay');
+            const sound = document.getElementById('scary-sound');
+            sound.currentTime = 0;
+            overlay.style.display = 'flex';
+            sound.play();
+            setTimeout(() => { 
+                overlay.style.display = 'none'; 
+            }, 1000); 
+        }
+
+        function collect(el) {
+            el.style.pointerEvents = "none";
+            const basket = document.getElementById('main-basket');
+            const rect = basket.getBoundingClientRect();
+            el.style.left = rect.left + 50 + "px";
+            el.style.top = rect.top + 20 + "px";
+            el.style.transform = "scale(0.3) rotate(720deg)";
+            el.style.opacity = "0";
+            setTimeout(() => {
+                let picked = document.createElement('span');
+                picked.innerHTML = el.innerHTML;
+                document.getElementById('basket-content').appendChild(picked);
+                el.remove();
+            }, 500);
+            flowerCount++;
+            document.getElementById('flower-count').innerHTML = flowerCount;
+        }
+
+        function checkName() {
+            let input = document.getElementById('name-input').value.trim().toLowerCase();
+            if (input === "chaima nada") {
+                document.getElementById('name-modal').classList.add('popping-effect');
+                for(let i=0; i<60; i++) { createConfetti(); }
+                setTimeout(() => {
+                    document.getElementById('name-modal').style.display = 'none';
+                    spawnFlower(true);
+                }, 600);
+            } else {
+                attempts++;
+                document.getElementById('error-msg').style.display = 'block';
+                if (attempts >= 3) { document.getElementById('hint-msg').style.display = 'block'; }
+            }
+        }
+
+        function createConfetti() {
+            let c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + "vw";
+            c.style.backgroundColor = ['#ff69b4', '#ffd700', 'white'][Math.floor(Math.random()*3)];
+            document.body.appendChild(c);
+            setTimeout(() => c.remove(), 3000);
+        }
+
+        function startCakeStage() {
+            document.getElementById('stage1').style.display = 'none';
+            document.getElementById('stage-cake').style.display = 'flex';
+            
+            const song = document.getElementById('hbd-song');
+            song.play();
+
+            // --- التعديل هنا: يحبس الغنية بعد 8 ثواني ---
+            setTimeout(() => {
+                song.pause();
+                song.currentTime = 0; // يرجعها للبداية
+            }, 20000); 
+
+            const cakeMsg = "دركا نروحو للمرحلة التانية لي فيها كعكة عيد ميلادك يرحك باباك متحركيش طيليفون بزاف باه تصلج الفكرة اي عياتني";
+            let i = 0;
+            function typeCakeText() {
+                if (i < cakeMsg.length) {
+                    document.getElementById('cake-text-anim').innerHTML += cakeMsg.charAt(i);
+                    i++;
+                    setTimeout(typeCakeText, 100);
+                } else {
+                    setTimeout(() => {
+                        document.getElementById('cake-visual').style.display = 'block';
+                        setupBlow();
+                    }, 500);
+                }
+            }
+            typeCakeText();
+        }
+
+        function setupBlow() {
+            let blown = false;
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                    const audioContext = new AudioContext();
+                    const analyser = audioContext.createAnalyser();
+                    const microphone = audioContext.createMediaStreamSource(stream);
+                    const javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+                    analyser.fftSize = 1024;
+                    microphone.connect(analyser);
+                    analyser.connect(javascriptNode);
+                    javascriptNode.connect(audioContext.destination);
+
+                    javascriptNode.onaudioprocess = () => {
+                        const array = new Uint8Array(analyser.frequencyBinCount);
+                        analyser.getByteFrequencyData(array);
+                        let sum = array.reduce((a, b) => a + b, 0);
+                        let average = sum / array.length;
+                        if (average > 60 && !blown) { 
+                            extinguish();
+                            blown = true;
+                            javascriptNode.onaudioprocess = null;
+                        }
+                    };
+                }).catch(() => {
+                    document.getElementById('cake-visual').onclick = extinguish;
+                });
+            } else {
+                document.getElementById('cake-visual').onclick = extinguish;
+            }
+        }
+
+        function extinguish() {
+            document.getElementById('main-flame').style.display = 'none';
+            document.getElementById('blow-msg').innerHTML = "HAPPY BIRTHDAY CHAIMA! ❤️✨";
+            for(let i=0; i<150; i++) { createConfetti(); }
+        }
+    </script>
+</body>
+</html>
